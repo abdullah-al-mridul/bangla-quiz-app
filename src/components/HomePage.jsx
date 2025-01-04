@@ -153,18 +153,55 @@ function HomePage() {
     const completionElement = document.querySelector(".completion-screen");
 
     try {
-      const canvas = await html2canvas(completionElement, {
-        backgroundColor: "#0f172a",
-        scale: 2, // Better quality
+      // Create a clone of the completion screen
+      const clone = completionElement.cloneNode(true);
+
+      // Set up clone styles for better capture
+      clone.style.position = "fixed";
+      clone.style.left = "0";
+      clone.style.top = "0";
+      clone.style.width = `${completionElement.offsetWidth}px`;
+      clone.style.background = "#1e293b";
+      clone.style.padding = "2rem";
+      clone.style.zIndex = "-1";
+      clone.style.transform = "none";
+      clone.style.animation = "none";
+
+      // Add clone to body
+      document.body.appendChild(clone);
+
+      // Capture the clone
+      const canvas = await html2canvas(clone, {
+        backgroundColor: "#1e293b",
+        scale: 2,
         logging: false,
+        useCORS: true,
+        allowTaint: true,
+        width: completionElement.offsetWidth,
+        height: completionElement.offsetHeight,
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.querySelector(".completion-screen");
+          if (clonedElement) {
+            // Ensure all animations are disabled
+            clonedElement.style.animation = "none";
+            clonedElement.querySelectorAll("*").forEach((el) => {
+              el.style.animation = "none";
+            });
+          }
+        },
       });
 
-      // Convert to image and download
-      const image = canvas.toDataURL("image/png");
+      // Convert to image with maximum quality
+      const image = canvas.toDataURL("image/png", 1.0);
+
+      // Create and trigger download
       const link = document.createElement("a");
       link.download = "quiz-result.png";
       link.href = image;
       link.click();
+
+      // Clean up
+      document.body.removeChild(clone);
     } catch (error) {
       console.error("Error generating image:", error);
     }
@@ -179,11 +216,17 @@ function HomePage() {
     e.currentTarget.style.transform = "none";
   };
 
+  const isPerfectScore = correctAnswers === currentQuestions.length;
+
   if (quizCompleted) {
     return (
       <div>
         <div className="quiz-container quiz-container-completed">
-          <div className="completion-screen">
+          <div
+            className={`completion-screen ${
+              isPerfectScore ? "perfect-score" : ""
+            }`}
+          >
             <h1>অভিনন্দন! 🎉</h1>
             <div className="score-display">
               <p>

@@ -432,6 +432,7 @@ input:focus {
   background-color: #1e293b;
   font-size: 1.1rem;
   line-height: 1.6;
+  animation: fadeIn 0.4s ease forwards;
 }
 
 .explanation.correct {
@@ -481,7 +482,11 @@ input:focus {
   padding: 2rem 1.5rem;
   background-color: #1e293b;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .completion-screen h1 {
@@ -497,6 +502,9 @@ input:focus {
   border-radius: 1rem;
   margin: 1.5rem 0;
   border: 2px solid #334155;
+  position: relative;
+  z-index: 2;
+  transform: translateZ(0);
 }
 
 .score-display p {
@@ -512,6 +520,7 @@ input:focus {
   color: #0ea5e9;
   margin: 1rem 0;
   text-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+  animation: float 3s ease-in-out infinite;
 }
 
 .retry-button {
@@ -628,6 +637,8 @@ input:focus {
   background-color: #0ea5e9;
   transition: width 0.4s ease;
   box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+  transform-origin: center;
+  animation: progressPulse 1s ease infinite;
 }
 
 .quiz-header .logout-button {
@@ -1336,4 +1347,216 @@ input:focus {
 
 .question-section.sliding-in-right {
   animation: slideInRight 0.3s ease forwards;
+}
+
+/* Add fade-in animation for explanation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.explanation {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Add a subtle pulse animation for the progress bar */
+@keyframes progressPulse {
+  0% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.2);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.progress-bar {
+  transform-origin: center;
+  animation: progressPulse 1s ease infinite;
+}
+
+/* Add a floating animation for the score percentage */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.score-percentage {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Add a celebration animation for completion screen */
+@keyframes celebrate {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.completion-screen {
+  animation: celebrate 0.8s ease forwards;
+}
+
+/* Add hover effect for navigation buttons */
+@keyframes buttonPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.nav-button:not(:disabled):hover {
+  animation: buttonPop 0.3s ease;
+}
+
+/* Add a subtle shake animation for error message */
+@keyframes errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(5px) rotate(1deg);
+  }
+}
+
+.error-message {
+  animation: errorShake 0.5s ease;
+}
+
+/* Add a success animation for copy button */
+@keyframes successPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.copy-button svg {
+  transition: transform 0.2s ease;
+}
+
+.copy-button:active svg {
+  animation: successPop 0.3s ease;
+}
+
+/* Add loading animation */
+@keyframes loadingDots {
+  0%,
+  100% {
+    content: "Loading";
+  }
+  25% {
+    content: "Loading.";
+  }
+  50% {
+    content: "Loading..";
+  }
+  75% {
+    content: "Loading...";
+  }
+}
+
+.loading::after {
+  content: "Loading";
+  animation: loadingDots 1.5s infinite;
+}
+
+/* Add confetti effect for perfect score */
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+.perfect-score::before,
+.perfect-score::after {
+  content: "🎉";
+  position: absolute;
+  animation: confetti 1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure score display has solid background */
+.score-display {
+  background-color: #0f172a;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 1.5rem 0;
+  border: 2px solid #334155;
+  position: relative;
+  z-index: 2;
+}
+
+/* Ensure text remains crisp in capture */
+.completion-screen h1,
+.score-display p,
+.score-percentage {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+}
+
+/* Ensure buttons are captured clearly */
+.completion-buttons {
+  position: relative;
+  z-index: 2;
+  transform: translateZ(0);
+}
+
+.completion-buttons button {
+  position: relative;
+  z-index: 2;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
