@@ -628,17 +628,20 @@ input:focus {
   left: 0;
   width: 100%;
   height: 6px;
-  background-color: #1e293b;
+  background-color: rgba(30, 41, 59, 0.8);
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .progress-bar {
   height: 100%;
-  background-color: #0ea5e9;
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+  background-size: 200% 100%;
   transition: width 0.4s ease;
-  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
   transform-origin: center;
-  animation: progressPulse 1s ease infinite;
+  animation: progressPulse 1s ease infinite, gradientFlow 3s ease infinite,
+    glowing 2s ease-in-out infinite;
+  border-radius: 0 4px 4px 0;
 }
 
 .quiz-header .logout-button {
@@ -1380,7 +1383,7 @@ input:focus {
 
 .progress-bar {
   transform-origin: center;
-  animation: progressPulse 1s ease infinite;
+  animation: progressPulse 1s ease infinite, gradientFlow 3s ease infinite;
 }
 
 /* Add a floating animation for the score percentage */
@@ -1559,4 +1562,205 @@ input:focus {
   z-index: 2;
   backface-visibility: hidden;
   transform: translateZ(0);
+}
+
+/* Update loading animation with typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.loading {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #0ea5e9;
+  animation: typing 2s steps(20, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #0ea5e9;
+  }
+}
+
+/* Add ripple effect for buttons */
+.nav-button,
+.retry-button,
+.share-button,
+.logout-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-button::after,
+.retry-button::after,
+.share-button::after,
+.logout-button::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform 0.5s, opacity 1s;
+}
+
+.nav-button:active::after,
+.retry-button:active::after,
+.share-button:active::after,
+.logout-button:active::after {
+  transform: scale(0, 0);
+  opacity: 0.3;
+  transition: 0s;
+}
+
+/* Add shine effect for perfect score */
+@keyframes shine {
+  from {
+    background-position: -200% center;
+  }
+  to {
+    background-position: 200% center;
+  }
+}
+
+.score-percentage {
+  background: linear-gradient(90deg, #0ea5e9 33%, #38bdf8 50%, #0ea5e9 67%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 3s linear infinite;
+}
+
+.perfect-score .score-percentage {
+  font-size: 4.5rem;
+  text-shadow: 2px 2px 4px rgba(14, 165, 233, 0.5);
+}
+
+/* Add bounce animation for question counter */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.question-counter .current {
+  display: inline-block;
+  animation: bounce 1s ease infinite;
+}
+
+/* Add focus animation for options */
+@keyframes focusPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(14, 165, 233, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+  }
+}
+
+.option-button:focus {
+  outline: none;
+  animation: focusPulse 1.5s infinite;
+}
+
+/* Add flip animation for copy success */
+@keyframes flipInY {
+  from {
+    transform: perspective(400px) rotateY(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(400px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+.copy-button svg {
+  animation: flipInY 0.6s ease-out;
+}
+
+/* Add gradient animation for progress bar */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+  background-size: 200% 100%;
+  animation: gradientFlow 3s ease infinite;
+}
+
+/* Add glowing animation for progress bar */
+@keyframes glowing {
+  0% {
+    box-shadow: 0 0 5px #0ea5e9, 0 0 10px #0ea5e9, 0 0 15px #0ea5e9;
+  }
+  50% {
+    box-shadow: 0 0 10px #38bdf8, 0 0 15px #38bdf8, 0 0 20px #38bdf8;
+  }
+  100% {
+    box-shadow: 0 0 5px #0ea5e9, 0 0 10px #0ea5e9, 0 0 15px #0ea5e9;
+  }
+}
+
+/* Update progress bar styles */
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+  background-size: 200% 100%;
+  transition: width 0.4s ease;
+  transform-origin: center;
+  animation: progressPulse 1s ease infinite, gradientFlow 3s ease infinite,
+    glowing 2s ease-in-out infinite;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Update progress container for better effect */
+.progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background-color: rgba(30, 41, 59, 0.8);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
 }
