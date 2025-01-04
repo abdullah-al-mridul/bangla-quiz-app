@@ -161,6 +161,15 @@ function HomePage() {
     }
   };
 
+  // Add touch event handling for buttons
+  const handleTouchStart = (e) => {
+    e.currentTarget.style.transform = "scale(0.98)";
+  };
+
+  const handleTouchEnd = (e) => {
+    e.currentTarget.style.transform = "none";
+  };
+
   if (quizCompleted) {
     return (
       <div>
@@ -340,7 +349,12 @@ function HomePage() {
           >
             আগের প্রশ্ন
           </button>
-          <button className="nav-button" onClick={handleNextQuestion}>
+          <button
+            className="nav-button"
+            onClick={handleNextQuestion}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             {currentQuestionIndex === currentQuestions.length - 1
               ? "কুইজ শেষ করুন"
               : "পরের প্রশ্ন"}

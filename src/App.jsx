@@ -4,6 +4,32 @@ import HomePage from "./components/HomePage";
 import Logo from "./components/Logo";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
+function ForgotPasswordModal({ isOpen, onClose }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <p className="modal-text">
+          পাসওয়ার্ড এর জন্য ডেভেলপার{" "}
+          <a
+            href="https://github.com/abdullah-al-mridul"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="modal-link"
+          >
+            আব্দুল্লাহ আল মৃদুল
+          </a>{" "}
+          এর সাথে যোগাযোগ করুন
+        </p>
+        <button className="modal-close" onClick={onClose}>
+          বন্ধ করুন
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function LoginForm() {
   const { login } = useAuth();
   const [formData, setFormData] = useState({
@@ -11,17 +37,22 @@ function LoginForm() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+
     if (formData.username === "admin" && formData.password === "123456") {
       login();
     } else {
-      alert("Invalid credentials!");
+      setError("ইমেইল অথবা পাসওয়ার্ড ভুল!");
     }
   };
 
   const handleChange = (e) => {
+    setError("");
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -34,6 +65,8 @@ function LoginForm() {
         <Logo />
         <h1>লগইন করুন</h1>
         <p className="subtitle">আপনার তথ্য কারো সাথে শেয়ার করবেন না</p>
+
+        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -76,10 +109,22 @@ function LoginForm() {
           </button>
 
           <div className="forgot-password">
-            <a href="#">পাসওয়ার্ড ভুলে গেছেন?</a>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModalOpen(true);
+              }}
+            >
+              পাসওয়ার্ড ভুলে গেছেন?
+            </a>
           </div>
         </form>
       </div>
+      <ForgotPasswordModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

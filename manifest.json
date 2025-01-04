@@ -1,0 +1,27 @@
+{
+  "name": "বাংলা জেএস কুইজ - জাভাস্ক্রিপ্ট শিখুন",
+  "short_name": "বাংলা জেএস কুইজ",
+  "description": "কুইজ এর মাদ্ধমে জাভাস্ক্রিপ্ট শিখুন",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "কুইজ শুরু করুন",
+      "short_name": "কুইজ",
+      "description": "জাভাস্ক্রিপ্ট কুইজ শুরু করুন",
+      "url": "/",
+      "icons": [{ "src": "/logo.svg", "sizes": "any" }]
+    }
+  ]
+}
