@@ -150,58 +150,99 @@ function HomePage() {
   );
 
   const handleShare = async () => {
-    const completionElement = document.querySelector(".completion-screen");
+    const scoreDisplay = document.querySelector(".score-display");
 
     try {
-      // Create a clone of the completion screen
-      const clone = completionElement.cloneNode(true);
+      // Create a clone of just the score display
+      const clone = scoreDisplay.cloneNode(true);
 
-      // Set up clone styles for better capture
-      clone.style.position = "fixed";
-      clone.style.left = "0";
-      clone.style.top = "0";
-      clone.style.width = `${completionElement.offsetWidth}px`;
-      clone.style.background = "#1e293b";
-      clone.style.padding = "2rem";
-      clone.style.zIndex = "-1";
-      clone.style.transform = "none";
+      // Create a wrapper with exact styling
+      const wrapper = document.createElement("div");
+      wrapper.style.position = "fixed";
+      wrapper.style.left = "0";
+      wrapper.style.top = "0";
+      wrapper.style.width = "100%";
+      wrapper.style.height = "100%";
+      wrapper.style.backgroundColor = "#0f172a";
+      wrapper.style.padding = "2rem";
+      wrapper.style.display = "flex";
+      wrapper.style.alignItems = "center";
+      wrapper.style.justifyContent = "center";
+      wrapper.style.zIndex = "-1";
+
+      // Add congratulations text
+      const congratsText = document.createElement("h1");
+      congratsText.textContent = "অভিনন্দন! 🎉";
+      congratsText.style.color = "#0ea5e9";
+      congratsText.style.marginBottom = "1.5rem";
+      congratsText.style.fontSize = "2rem";
+      congratsText.style.textAlign = "center";
+
+      // Create inner container
+      const container = document.createElement("div");
+      container.style.background = "#1e293b";
+      container.style.padding = "2rem";
+      container.style.borderRadius = "1rem";
+      container.style.maxWidth = "500px";
+      container.style.width = "100%";
+      container.style.textAlign = "center";
+
+      // Style the clone
+      clone.style.margin = "0";
+      clone.style.background = "#0f172a";
       clone.style.animation = "none";
+      clone.style.transform = "none";
+      clone.style.border = "2px solid #334155";
+      clone.style.borderRadius = "1rem";
+      clone.style.padding = "2rem";
 
-      // Add clone to body
-      document.body.appendChild(clone);
+      // Fix score visibility
+      const scoreElement = clone.querySelector(".score-percentage");
+      if (scoreElement) {
+        scoreElement.style.color = isPerfectScore ? "#22c55e" : "#0ea5e9";
+        scoreElement.style.fontSize = isPerfectScore ? "4.5rem" : "4rem";
+        scoreElement.style.fontWeight = "bold";
+        scoreElement.style.margin = "1rem 0";
+        scoreElement.style.opacity = "1";
+        scoreElement.style.animation = "none";
+        scoreElement.style.background = "none";
+        scoreElement.style.webkitTextFillColor = "initial";
+      }
 
-      // Capture the clone
-      const canvas = await html2canvas(clone, {
+      // Fix text color
+      const textElement = clone.querySelector("p");
+      if (textElement) {
+        textElement.style.color = "#94a3b8";
+        textElement.style.fontSize = "1.1rem";
+        textElement.style.marginBottom = "1rem";
+      }
+
+      // Assemble the elements
+      container.appendChild(congratsText);
+      container.appendChild(clone);
+      wrapper.appendChild(container);
+      document.body.appendChild(wrapper);
+
+      // Capture with html2canvas
+      const canvas = await html2canvas(container, {
         backgroundColor: "#1e293b",
         scale: 2,
         logging: false,
         useCORS: true,
         allowTaint: true,
-        width: completionElement.offsetWidth,
-        height: completionElement.offsetHeight,
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.querySelector(".completion-screen");
-          if (clonedElement) {
-            // Ensure all animations are disabled
-            clonedElement.style.animation = "none";
-            clonedElement.querySelectorAll("*").forEach((el) => {
-              el.style.animation = "none";
-            });
-          }
-        },
       });
 
-      // Convert to image with maximum quality
+      // Convert to image
       const image = canvas.toDataURL("image/png", 1.0);
 
-      // Create and trigger download
+      // Create download link
       const link = document.createElement("a");
       link.download = "quiz-result.png";
       link.href = image;
       link.click();
 
       // Clean up
-      document.body.removeChild(clone);
+      document.body.removeChild(wrapper);
     } catch (error) {
       console.error("Error generating image:", error);
     }
