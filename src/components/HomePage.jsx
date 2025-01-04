@@ -15,6 +15,7 @@ function HomePage() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const footerRef = useRef(null);
+  const [slideDirection, setSlideDirection] = useState("");
 
   // Initialize random questions when component mounts
   useEffect(() => {
@@ -49,6 +50,10 @@ function HomePage() {
       setCurrentQuestionIndex((prev) => prev + 1);
       setSelectedOption(null);
       setShowExplanation(false);
+      setSlideDirection("sliding-out-left");
+      setTimeout(() => {
+        setSlideDirection("sliding-in-right");
+      }, 300);
     } else if (!quizCompleted) {
       setQuizCompleted(true);
     }
@@ -59,6 +64,10 @@ function HomePage() {
       setCurrentQuestionIndex((prev) => prev - 1);
       setSelectedOption(null);
       setShowExplanation(false);
+      setSlideDirection("sliding-out-right");
+      setTimeout(() => {
+        setSlideDirection("sliding-in-left");
+      }, 300);
     }
   };
 
@@ -249,7 +258,7 @@ function HomePage() {
         </button>
       </div>
 
-      <div className="question-section">
+      <div className={`question-section ${slideDirection}`}>
         <h2 className="question-title">{currentQuestion.question}</h2>
         <p className="question-description">{currentQuestion.description}</p>
 

@@ -39,15 +39,21 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
+  const [animationClass, setAnimationClass] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
+    setAnimationClass("");
 
     if (formData.username === "admin" && formData.password === "123456") {
-      login();
+      setAnimationClass("correct-answer");
+      setTimeout(() => {
+        login();
+      }, 500);
     } else {
       setError("ইমেইল অথবা পাসওয়ার্ড ভুল!");
+      setAnimationClass("incorrect-answer");
     }
   };
 
@@ -61,7 +67,7 @@ function LoginForm() {
 
   return (
     <div className="login-container">
-      <div className="login-box">
+      <div className={`login-box ${animationClass}`}>
         <Logo />
         <h1>লগইন করুন</h1>
         <p className="subtitle">আপনার তথ্য কারো সাথে শেয়ার করবেন না</p>
